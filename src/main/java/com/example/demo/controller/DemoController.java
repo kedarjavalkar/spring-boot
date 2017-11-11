@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -29,12 +30,12 @@ public class DemoController {
 	}
 
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public @ResponseBody Response saveUser(@RequestBody User user) {
+	public @ResponseBody Response saveUser(@Valid @RequestBody User user) {
 		return Response.status(Status.CREATED).entity(userRepository.save(user)).build();
 	}
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	public @ResponseBody User getUserById(@PathVariable("id") Long id) {
+	public @ResponseBody User getUserById(@PathVariable(value = "id", required = true) Long id) {
 		return userRepository.getById(id);
 	}
 
@@ -44,8 +45,9 @@ public class DemoController {
 	}
 
 	@RequestMapping(value = "/users/find", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUserByIdAndFirstName(@RequestParam("firstName") String firstName,
-			@RequestParam("lastName") String lastName) {
+	public @ResponseBody List<User> getUserByIdAndFirstName(
+			@RequestParam(value = "firstName", required = true) String firstName,
+			@RequestParam(value = "lastName", required = true) String lastName) {
 		return userRepository.getByFirstNameAndLastName(firstName, lastName);
 	}
 }
